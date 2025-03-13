@@ -1,0 +1,81 @@
+[package]
+edition = "2021"
+name = "esp32c3-espnow"
+version = "0.1.0"
+
+[[bin]]
+name = "esp32c3-espnow"
+path = "src/bin/test.rs"
+
+[dependencies]
+embassy-sync = { version = "0.6.0" }
+embassy-net = { version = "0.6.0", features = [
+    "dhcpv4",
+    "medium-ethernet",
+    "tcp",
+    "udp",
+] }
+embedded-io = { version = "0.6.1" }
+embedded-io-async = { version = "0.6.1" }
+esp-alloc = { version = "0.7.0" }
+esp-backtrace = { version = "0.15.1", features = [
+    "esp32c3",
+    "exception-handler",
+    "panic-handler",
+    "println",
+] }
+esp-hal = { version = "1.0.0-beta.0", features = [
+    "esp32c3",
+    "unstable"
+] }
+esp-println = { version = "0.13.0", features = [
+    "esp32c3",
+    "log"
+] }
+log = { version = "0.4.21" }
+smoltcp = { version = "0.12.0", default-features = false, features = [
+    "medium-ethernet",
+    "multicast",
+    "proto-dhcpv4",
+    "proto-dns",
+    "proto-ipv4",
+    "socket-dns",
+    "socket-icmp",
+    "socket-raw",
+    "socket-tcp",
+    "socket-udp",
+] }
+critical-section = { version = "1.2.0" }
+embassy-executor = { version = "0.7.0", features = [
+    "task-arena-size-20480"
+] }
+embassy-time = { version = "0.4.0", features = [
+    "generic-queue-8"
+] }
+esp-hal-embassy = { version = "0.7.0", features = [
+    "esp32c3"
+] }
+esp-wifi = { version = "0.13.0", features = [
+    "builtin-scheduler",
+    "esp-alloc",
+    "esp-now",
+    "esp32c3",
+    "log",
+    "wifi",
+] }
+heapless = { version = "0.8.0", default-features = false }
+static_cell = { version = "2.1.0", features = [
+    "nightly"
+] }
+
+[profile.dev]
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1
+debug = 2
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
