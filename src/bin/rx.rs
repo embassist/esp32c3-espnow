@@ -12,11 +12,10 @@ use esp_hal::{
 };
 use esp_println::println;
 use esp_wifi::{
-    esp_now::{EspNowManager, BROADCAST_ADDRESS},
+    esp_now::BROADCAST_ADDRESS,
     init, EspWifiController,
 };
 
-// When you are okay with using a nightly compiler it's better to use https://docs.rs/static_cell/2.1.0/static_cell/macro.make_static.html
 macro_rules! make_static {
     ($t:ty,$val:expr) => {{
         static STATIC_CELL: static_cell::StaticCell<$t> = static_cell::StaticCell::new();
@@ -52,15 +51,13 @@ async fn main(spawner: Spawner) -> ! {
     let systimer = SystemTimer::new(peripherals.SYSTIMER);
     esp_hal_embassy::init(systimer.alarm0);
 
-    let (manager, mut sender, _receiver) = esp_now.split();
-    let _manager = make_static!(EspNowManager<'static>, manager);
+    let (_manager, mut sender, _receiver) = esp_now.split();
 
     let mut ticker = Ticker::every(Duration::from_secs(1));
     loop {
         ticker.next().await;
 
-        println!("Send Broadcast...");
         let status = sender.send_async(&BROADCAST_ADDRESS, b"Hello.").await;
-        println!("Send broadcast status: {:?}", status);
+        println!("Sent: {:?}", status);
     }
 }
